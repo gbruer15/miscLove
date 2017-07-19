@@ -2,7 +2,7 @@
 function love.load()
 
 	window = {}
-	window.width, window.height = love.window.getDimensions()
+	window.width, window.height = love.graphics.getDimensions()
 	
 	paused = true
 	
@@ -337,7 +337,7 @@ end
 function love.keypressed(key)
 	if key == 'escape' then
 		love.event.quit()
-	elseif key == ' ' then
+	elseif key == 'space' then
 		if not sleep then
 			paused = not paused
 			scored = false
