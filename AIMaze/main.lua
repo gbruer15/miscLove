@@ -4,6 +4,7 @@ require 'lib/camera'
 require 'lib/New Tables'
 require 'lib/collision'
 require 'lib/ai'
+require 'level'
 require 'level2'
 require 'level2nodes'
 
@@ -11,7 +12,7 @@ function love.load()
 	
 	paused = true
 	window = {}
-	window.width,window.height = love.window.getDimensions()
+	window.width,window.height = love.graphics.getDimensions()
 	
 	
 	plotnouns = {"apples",'mice','letters','tables','groceries', 'paper','zombies','people','pancakes','shirts', 'elephants','pens','gorillas','maze-makers', 'gravity', 'fortran', 'Mason', 'flour', 'flowers', 'keys', 'lions','Minotaurs', 'laptops', 'supernovas', 'black holes', 'light', 'planets', 'gangs', 'horders', 'trash', 'money',"Magikarp","leprechauns", "mazes", "hordes", 'Jeromes'}
@@ -195,7 +196,7 @@ function love.keypressed(key)
 		camera.yscale = camera.yscale/0.8
 	elseif key == 'i' then	
 		ai.info = not ai.info
-	elseif key == ' ' then
+	elseif key == 'space' then
 		paused = not paused
 	end
 
