@@ -142,7 +142,7 @@ end
 
 function love.mousepressed(x,y,button)
 	wx,wy = camera.getWorldPoint(x,y)
-	if button == 'l' then
+	if button == 1 then
 		if editor.state == 'ready' then
 			table.insert(level.blocks, 1, {})
 			level.blocks[1].x,level.blocks[1].y = math.round(wx,grid.size),math.round(wy,grid.size)
@@ -188,7 +188,7 @@ function love.mousepressed(x,y,button)
 end
 
 function love.mousereleased(x,y,button)
-	if button == 'l' then
+	if button == 1 then
 		if editor.state == 'adding' then
 			x,y = camera.getWorldPoint(x,y)
 			level.blocks[1].width,level.blocks[1].height = math.round(x,grid.size) - level.blocks[1].x, math.round(y,grid.size) - level.blocks[1].y
