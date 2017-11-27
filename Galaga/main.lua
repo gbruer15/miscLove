@@ -25,7 +25,7 @@ function love.load()
 	
 	
 	window = {}
-	window.width, window.height = love.window.getDimensions()
+	window.width, window.height = love.graphics.getDimensions()
 
 	spaceimage = love.graphics.newImage("my star background.png")
 	
@@ -189,7 +189,7 @@ function love.update(dt)
 		
 		
 		--
-		if love.keyboard.isDown(" ") then
+		if love.keyboard.isDown("space") then
 			if missileA.timer > missileA.delay then
 				missileA.timer = 0
 				fireMissile(player.x + player.picwidth/2-missileA.width/2, player.y+player.picwidth*0.1,0,-missileA.speed)
@@ -307,7 +307,7 @@ end
 
 
 function drawLaser()
-	if love.mouse.isDown('l') then
+	if love.mouse.isDown(1) then
 	--[[
 		local alpha = 55
 		local width = laserwidth
@@ -412,7 +412,7 @@ function updateEnemies(dt)
 			
 		end
 		
-		if love.mouse.isDown('l') and collision.rectangles(v.x,v.y,v.width,v.height,  player.x+player.picwidth/2-laserwidth/2,0,laserwidth,player.y ) then
+		if love.mouse.isDown(1) and collision.rectangles(v.x,v.y,v.width,v.height,  player.x+player.picwidth/2-laserwidth/2,0,laserwidth,player.y ) then
 			-- local left = math.abs(player.x+player.picwidth/2+laserwidth/2 - v.x-v.width)
 			-- local right = math.abs(v.x- (player.x+player.picwidth/2 - laserwidth/2))
 			-- local minl = math.abs(laserwidth - v.width)/2
