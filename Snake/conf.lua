@@ -1,8 +1,8 @@
 
 function love.conf(t)
 
-	t.screen.width = 800
-	t.screen.height = 600
+	t.window.width = 800
+	t.window.height = 600
 
 
 end

@@ -106,7 +106,7 @@ function love.update(dt)
 			table.insert(snake.drops, {x,y})
 		end 
 	
-		love.graphics.setCaption(love.timer.getFPS())
+		love.window.setTitle(love.timer.getFPS())
 	
 		for i,v in pairs(snake.drops) do
 			if math.floor(snake.x) == v[1] and math.floor(snake.y) == v[2] then
@@ -130,7 +130,6 @@ function love.draw()
 		love.graphics.draw(snake.drop.pic,math.floor(v[1])*gridScale,math.floor(v[2])*gridScale,0, gridScale/snake.drop.width,gridScale/ snake.drop.height)
 	end
 	
-	love.graphics.setColorMode('modulate')
 	love.graphics.setColor(0,100,0)
 	for i,v in pairs(snake.soon) do
 		love.graphics.draw(snake.drop.pic,math.floor(v[1])*gridScale,math.floor(v[2])*gridScale,0, gridScale/snake.drop.width,gridScale/ snake.drop.height)
