@@ -92,7 +92,7 @@ function love.update(dt)
 		s:update()
 	end
 	
-	love.graphics.setCaption(love.timer.getFPS())
+	love.window.setTitle(love.timer.getFPS())
 	
 	ball.gravity = sliders.gravity.value*sliders.gravity.multiplyer*metersize
 end

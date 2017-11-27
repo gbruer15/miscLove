@@ -55,7 +55,7 @@ function slider:update()
 	else
 		self.hover = false
 	end
-	if self.selected and love.mouse.isDown('l') then
+	if self.selected and love.mouse.isDown(1) then
 		self.value = (x + self.mouseoffx - self.x)/self.width
 		if self.value > 1 then
 			self.value = 1
@@ -69,7 +69,6 @@ function slider:update()
  end
  
 function slider:draw()
-	love.graphics.setColorMode("modulate")
 	if self.shadow then 
 		love.graphics.setColor(0,0,0)
 		love.graphics.draw(self.image,self.x+self.shadow.x,self.y+self.shadow.y,0,(self.width+self.shadow.width)/self.imagewidth,(self.height+self.shadow.height)/self.imageheight)			
