@@ -9,7 +9,7 @@ function love.load()
 	cheatline = false
 	
 	pixelfont = love.graphics.newFont("pixel font.ttf", 48)
-	windowWidth, windowHeight = love.window.getDimensions()
+	windowWidth, windowHeight = love.graphics.getDimensions()
 	
 	player={}
 	player.x=0
@@ -197,7 +197,7 @@ function love.keypressed(key)
 		clear = not clear
 	elseif key == 'p' then
 		paused = not paused
-	elseif key == ' ' then
+	elseif key == 'space' then
 		if circle.dead then
 			if player.x + playerWidth/2 > windowWidth/2 then
 				circle.x = player.x + playerWidth/2 - 250
