@@ -45,7 +45,7 @@ function love.load()
 	scoretext.xspace = 20
 	
 	mediumfont = love.graphics.newFont("pixel font.ttf",24)
-	love.graphics.setCaption("Pong")
+	love.window.setTitle("Pong")
 	love.graphics.setBackgroundColor(0,0,0)
 	win = false
 	scored = false
@@ -307,7 +307,7 @@ end
 function love.keypressed(key)
 	if key == 'escape' then
 		love.event.quit()
-	elseif key == ' ' then
+	elseif key == 'space' then
 		paused = not paused
 		scored = false
 	end
