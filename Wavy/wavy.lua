@@ -1,6 +1,29 @@
 local wavy = {}
 wavy.__index = wavy
 
+wavy.initializations = {}
+
+function wavy.initializations.radial(i, j, gridWidth, gridHeight)
+    return math.atan((i - gridHeight/2)/(j - gridWidth/2))
+end
+
+function wavy.initializations.circumferential(i, j, gridWidth, gridHeight)
+    return math.atan((i - gridHeight/2)/(j - gridWidth/2)) + math.pi/2
+end
+
+function wavy.initializations.random(i, j, gridWidth, gridHeight)
+    return math.pi/2*(math.random()*2-1)
+end
+
+function wavy.initializations.lines(i, j, gridWidth, gridHeight)
+    if i == 0 then
+        return 1
+    elseif i == gridHeight+1 then
+        return -1
+    end
+end
+
+
 function wavy.make(att)
     local self = {}
     setmetatable(self, wavy)
@@ -19,6 +42,7 @@ function wavy.make(att)
     local gridWidth = math.ceil(love.graphics.getWidth() / self.params.granularity) - 1
     local gridHeight = math.ceil(love.graphics.getHeight() / self.params.granularity) - 1
 
+    self.initializer = self.initializations[self.params.initialization]
     self.skip = {}
     for i = 0, gridHeight+1 do
         self.grid1[i] = {}
@@ -31,42 +55,43 @@ function wavy.make(att)
                 self.grid1[i][j] = math.pi/2*(math.random()*2-1)
             else
                 -- this is an edge piece
-                if self.params.initialization == 'radial' then
-                    self.grid1[i][j] = math.atan((i - gridHeight/2)/(j - gridWidth/2))
-                elseif self.params.initialization == 'circumferential' then
-                    self.grid1[i][j] = math.atan((i - gridHeight/2)/(j - gridWidth/2)) + math.pi/2
-                elseif self.params.initialization == 'random' then
-                    self.grid1[i][j] = math.pi/2*(math.random()*2-1)
-                elseif self.params.initialization == 'lines' then
-                    if i == 0 then
-                        self.grid1[i][j] = 1
-                    elseif i == gridHeight+1 then
-                        self.grid1[i][j] = -1
-                    end
-                end
+                self.grid1[i][j] = self.initializer(i, j, gridWidth, gridHeight)
             end
             self.grid2[i][j] = self.grid1[i][j]
         end
     end
     self.need_to_update = true
+    self.t = 0
     return self
 end
 
-function wavy:update()
+function wavy:update(dt)
     local epsilon = 0
     if not self.need_to_update then
         return
     end
 
     -- Make border more interesting
-    local t = love.timer.getTime()
-    for j = 0, #self.grid1[0] do
-        self.grid1[0][j] = math.pi/3*math.sin(3*t) + 0.2
-        self.grid1[#self.grid1][j] = -math.pi/2*math.sin(t)
-    end
-    for i = 0, #self.grid1 do
-        self.grid1[i][0] = math.pi/4*math.cos(3*t) - 0.3
-        self.grid1[i][#self.grid1[i]] = -math.pi/2*math.sin(t)
+    self.t = self.t + dt
+    local speed = 1
+    if false then
+        for j = 0, #self.grid1[0] do
+            self.grid1[0][j] = math.pi/3*math.sin(3*self.t) + 0.2
+            self.grid1[#self.grid1][j] = -math.pi/2*math.sin(self.t)
+        end
+        for i = 0, #self.grid1 do
+            self.grid1[i][0] = math.pi/4*math.cos(3*self.t) - 0.3
+            self.grid1[i][#self.grid1[i]] = -math.pi/2*math.sin(self.t)
+        end
+    else
+        for j = 0, #self.grid1[0] do
+            self.grid1[0][j] = self.grid1[0][j] + speed*dt
+            self.grid1[#self.grid1][j] = self.grid1[#self.grid1][j] + speed*dt
+        end
+        for i = 0, #self.grid1 do
+            self.grid1[i][0] = self.grid1[i][0] + speed*dt 
+            self.grid1[i][#self.grid1[i]] = self.grid1[i][#self.grid1[i]] + speed*dt 
+        end
     end
 
     for i = 1, #self.grid1-1 do
@@ -178,7 +203,27 @@ function wavy:addPoints(points)
     self.need_to_update = true
 end
 
+function wavy:resize(width, height)
+    local gridWidth = math.ceil(width / self.params.granularity) - 1
+    local gridHeight = math.ceil(height / self.params.granularity) - 1
 
+    for i = 0, gridHeight+1 do
+        self.grid1[i] = {}
+        self.grid2[i] = {}
+        self.skip[i] = {}
+        for j = 0, gridWidth+1 do
+            self.grid1[i][j] = 0
+            if i ~= 0 and i ~= gridHeight+1 and j~= 0 and j ~= gridWidth+1 then
+                -- not an edge piece
+                self.grid1[i][j] = math.pi/2*(math.random()*2-1)
+            else
+                -- this is an edge piece
+                self.grid1[i][j] = self.initializer(i, j, gridWidth, gridHeight)
+            end
+            self.grid2[i][j] = self.grid1[i][j]
+        end
+    end
+end
 
 
 

@@ -28,12 +28,16 @@ function love.load()
     end
 end
 
-function love.update()
+function love.update(dt)
     local numFrames = timeControl:update()
 
     for i = 1, numFrames do
-        grid:update()
+        grid:update(dt)
     end
+end
+
+function love.resize(width, height)
+    grid:resize(width, height)
 end
 
 function love.draw()
