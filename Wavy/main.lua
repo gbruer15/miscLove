@@ -7,8 +7,10 @@ function love.load()
         lineLength = 75,
         lineWidth = 20,
         lineColor = 'crazy',
-        spinFactor = 1,
-        initialization = 'circumferential',
+        spinFactor = 10,
+        initialization = 'radial',
+        fixedAngle = false,
+        borderMovement = false
     }
     love.window.setTitle('Wavy')
 
@@ -31,9 +33,7 @@ end
 function love.update(dt)
     local numFrames = timeControl:update()
 
-    for i = 1, numFrames do
-        grid:update(dt)
-    end
+    grid:update(dt, numFrames)
 end
 
 function love.resize(width, height)

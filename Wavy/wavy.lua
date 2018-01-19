@@ -38,6 +38,8 @@ function wavy.make(att)
     self.params.lineColor = att.lineColor or 'crazy'
     self.params.spinFactor = att.spinFactor or 1
     self.params.initialization = att.initialization or 'radial'
+    self.params.fixedAngle = (att.fixedAngle == nil and true) or att.fixedAngle
+    self.params.borderMovement = att.borderMovement or false
 
     local gridWidth = math.ceil(love.graphics.getWidth() / self.params.granularity) - 1
     local gridHeight = math.ceil(love.graphics.getHeight() / self.params.granularity) - 1
@@ -65,7 +67,7 @@ function wavy.make(att)
     return self
 end
 
-function wavy:update(dt)
+function wavy:update(dt, iterations)
     local epsilon = 0
     if not self.need_to_update then
         return
@@ -74,16 +76,16 @@ function wavy:update(dt)
     -- Make border more interesting
     self.t = self.t + dt
     local speed = 1
-    if false then
+    if self.params.borderMovement == 'sine' then
         for j = 0, #self.grid1[0] do
-            self.grid1[0][j] = math.pi/3*math.sin(3*self.t) + 0.2
+            self.grid1[0][j] = math.pi/2*math.sin(self.t)
             self.grid1[#self.grid1][j] = -math.pi/2*math.sin(self.t)
         end
         for i = 0, #self.grid1 do
-            self.grid1[i][0] = math.pi/4*math.cos(3*self.t) - 0.3
+            self.grid1[i][0] = math.pi/2*math.cos(self.t)
             self.grid1[i][#self.grid1[i]] = -math.pi/2*math.sin(self.t)
         end
-    else
+    elseif self.params.borderMovement == 'circle' then
         for j = 0, #self.grid1[0] do
             self.grid1[0][j] = self.grid1[0][j] + speed*dt
             self.grid1[#self.grid1][j] = self.grid1[#self.grid1][j] + speed*dt
@@ -94,28 +96,31 @@ function wavy:update(dt)
         end
     end
 
-    for i = 1, #self.grid1-1 do
-        -- print('Tada:', #self.grid1[i])
-        for j = 1, #self.grid1[i]-1 do
-            -- print(i, j)
-            if not self.skip[i][j] then
-                self.grid2[i][j] = 0.25*(
-                    self.grid1[i][j-1]
-                    + self.grid1[i][j+1]
-                    + self.grid1[i-1][j]
-                    + self.grid1[i+1][j]
-                )
-                epsilon = epsilon + math.abs(self.grid2[i][j] - self.grid1[i][j])
-            else
-                self.grid2[i][j] = self.grid1[i][j]
+    for _ = 1, (iterations or 1) do
+        for i = 1, #self.grid1-1 do
+            -- print('Tada:', #self.grid1[i])
+            for j = 1, #self.grid1[i]-1 do
+                -- print(i, j)
+                if not self.skip[i][j] then
+                    self.grid2[i][j] = 0.25*(
+                        self.grid1[i][j-1]
+                        + self.grid1[i][j+1]
+                        + self.grid1[i-1][j]
+                        + self.grid1[i+1][j]
+                    )
+                    epsilon = epsilon + math.abs(self.grid2[i][j] - self.grid1[i][j])
+                else
+                    self.grid2[i][j] = self.grid1[i][j]
+                end
             end
         end
-    end
-    self.grid1, self.grid2 = self.grid2, self.grid1
+        self.grid1, self.grid2 = self.grid2, self.grid1
 
-    if epsilon < 1e-9 then
-        self.need_to_update = false
-        print("Stopping update: ", epsilon)
+        if epsilon < 1e-9 then
+            self.need_to_update = false
+            print("Stopping update: ", epsilon)
+            break
+        end
     end
 end
 
@@ -196,7 +201,9 @@ function wavy:addPoints(points)
             if angle > 0 then angle = angle + self.params.spinFactor*math.pi end
             if angle < 0 then angle = angle - self.params.spinFactor*math.pi end
             self.grid1[r][c] = angle
-            self.skip[r][c] = true
+            if self.params.fixedAngle then
+                self.skip[r][c] = true
+            end
         end
     end
 
