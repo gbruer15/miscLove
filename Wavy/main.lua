@@ -1,16 +1,31 @@
+local oldSetColor = love.graphics.setColor
+function love.graphics.setColor(r,g,b,a)
+	if type(r) == 'table' then
+		r = r[1]
+		g = r[2]
+		b = r[3]
+		a = r[4]
+	end
+
+	r = r/255
+	g = g/255
+	b = b/255
+	a = a and a/255 
+    oldSetColor(r,g,b,a)
+end
 local wavy = require('wavy')
 local frames = require('frames')
 
 function love.load()
     grid = wavy.make{
-        granularity = 15,
-        lineLength = 75,
-        lineWidth = 20,
+        granularity = 10,
+        lineLength = 20,
+        lineWidth = 1,
         lineColor = 'crazy',
-        spinFactor = 10,
+        spinFactor = 100,
         initialization = 'radial',
         fixedAngle = false,
-        borderMovement = false
+        borderMovement = true
     }
     love.window.setTitle('Wavy')
 
