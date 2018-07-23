@@ -1,16 +1,19 @@
+require 'compatibility10'
 local wavy = require('wavy')
 local frames = require('frames')
+
+local fullscreen = false
 
 function love.load()
     grid = wavy.make{
         granularity = 15,
-        lineLength = 75,
-        lineWidth = 20,
+        lineLength = 25,
+        lineWidth = 2,
         lineColor = 'crazy',
         spinFactor = 10,
-        initialization = 'radial',
+        initialization = 'random',
         fixedAngle = false,
-        borderMovement = false
+        borderMovement = 'constant'
     }
     love.window.setTitle('Wavy')
 
@@ -76,6 +79,8 @@ function love.keypressed(k)
     elseif k == 'r' then
         timeControl.timeFactor = 1
         timeControl.leftover = 0
+    elseif k == 'f' then
+        fullscreen = love.window.setFullscreen(not fullscreen)
     end
 end
 
