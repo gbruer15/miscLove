@@ -68,6 +68,7 @@ function wavy.make(att)
     end
     self.need_to_update = true
     self.t = 0
+    self.speed = 1
     return self
 end
 
@@ -79,7 +80,6 @@ function wavy:update(dt, iterations)
 
     -- Make border more interesting
     self.t = self.t + dt
-    local speed = 1
     if self.params.borderMovement == 'sine' then
         for j = 0, #self.grid1[0] do
             self.grid1[0][j] = math.pi/2*math.sin(self.t)
@@ -91,12 +91,12 @@ function wavy:update(dt, iterations)
         end
     elseif self.params.borderMovement == 'constant' then
         for j = 0, #self.grid1[0] do
-            self.grid1[0][j] = self.grid1[0][j] + speed*dt
-            self.grid1[#self.grid1][j] = self.grid1[#self.grid1][j] + speed*dt
+            self.grid1[0][j] = self.grid1[0][j] + self.speed*dt
+            self.grid1[#self.grid1][j] = self.grid1[#self.grid1][j] + self.speed*dt
         end
         for i = 0, #self.grid1 do
-            self.grid1[i][0] = self.grid1[i][0] + speed*dt 
-            self.grid1[i][#self.grid1[i]] = self.grid1[i][#self.grid1[i]] + speed*dt 
+            self.grid1[i][0] = self.grid1[i][0] + self.speed*dt 
+            self.grid1[i][#self.grid1[i]] = self.grid1[i][#self.grid1[i]] + self.speed*dt 
         end
     end
 

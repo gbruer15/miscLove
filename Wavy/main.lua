@@ -5,16 +5,30 @@ local frames = require('frames')
 local fullscreen = false
 
 function love.load()
-    grid = wavy.make{
-        granularity = 15,
-        lineLength = 25,
-        lineWidth = 2,
-        lineColor = 'crazy',
-        spinFactor = 10,
-        initialization = 'random',
-        fixedAngle = false,
-        borderMovement = 'constant'
-    }
+    lines = false
+    if lines then
+        grid = wavy.make{
+            granularity = 15,
+            lineLength = 35,
+            lineWidth = 2,
+            lineColor = 'crazy',
+            spinFactor = 0,
+            initialization = 'fixed',
+            fixedAngle = true,
+            borderMovement = 'constant'
+        }
+    else
+        grid = wavy.make{
+            granularity = 10,
+            lineLength = 10*math.sqrt(2),
+            lineWidth = 10*math.sqrt(2),
+            lineColor = 'crazy',
+            spinFactor = 0,
+            initialization = 'fixed',
+            fixedAngle = true,
+            borderMovement = 'constant'
+        }
+    end
     love.window.setTitle('Wavy')
 
     timeControl = frames.make{}
@@ -76,6 +90,10 @@ function love.keypressed(k)
         timeControl.timeFactor = timeControl.timeFactor*0.8
     elseif k == 'a' then
         timeControl.timeFactor = timeControl.timeFactor/0.8
+    elseif k == 'z' then
+        grid.speed = grid.speed*0.8
+    elseif k == 'x' then
+        grid.speed = grid.speed/0.8
     elseif k == 'r' then
         timeControl.timeFactor = 1
         timeControl.leftover = 0
