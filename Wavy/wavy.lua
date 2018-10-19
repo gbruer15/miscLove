@@ -15,13 +15,17 @@ function wavy.initializations.random(i, j, gridWidth, gridHeight)
     return math.pi/2*(math.random()*2-1)
 end
 
-function wavy.initializations.lines(i, j, gridWidth, gridHeight)
-    if i == 0 then
-        return 1
-    elseif i == gridHeight+1 then
-        return -1
-    end
+function wavy.initializations.fixed(i, j, gridWidth, gridHeight)
+    return 0
 end
+
+-- function wavy.initializations.lines(i, j, gridWidth, gridHeight)
+--     if i == 0 then
+--         return 1
+--     elseif i == gridHeight+1 then
+--         return -1
+--     end
+-- end
 
 
 function wavy.make(att)
@@ -64,6 +68,7 @@ function wavy.make(att)
     end
     self.need_to_update = true
     self.t = 0
+    self.speed = 1
     return self
 end
 
@@ -75,7 +80,6 @@ function wavy:update(dt, iterations)
 
     -- Make border more interesting
     self.t = self.t + dt
-    local speed = 1
     if self.params.borderMovement == 'sine' then
         for j = 0, #self.grid1[0] do
             self.grid1[0][j] = math.pi/2*math.sin(self.t)
@@ -85,14 +89,14 @@ function wavy:update(dt, iterations)
             self.grid1[i][0] = math.pi/2*math.cos(self.t)
             self.grid1[i][#self.grid1[i]] = -math.pi/2*math.sin(self.t)
         end
-    elseif self.params.borderMovement == 'circle' then
+    elseif self.params.borderMovement == 'constant' then
         for j = 0, #self.grid1[0] do
-            self.grid1[0][j] = self.grid1[0][j] + speed*dt
-            self.grid1[#self.grid1][j] = self.grid1[#self.grid1][j] + speed*dt
+            self.grid1[0][j] = self.grid1[0][j] + self.speed*dt
+            self.grid1[#self.grid1][j] = self.grid1[#self.grid1][j] + self.speed*dt
         end
         for i = 0, #self.grid1 do
-            self.grid1[i][0] = self.grid1[i][0] + speed*dt 
-            self.grid1[i][#self.grid1[i]] = self.grid1[i][#self.grid1[i]] + speed*dt 
+            self.grid1[i][0] = self.grid1[i][0] + self.speed*dt 
+            self.grid1[i][#self.grid1[i]] = self.grid1[i][#self.grid1[i]] + self.speed*dt 
         end
     end
 
